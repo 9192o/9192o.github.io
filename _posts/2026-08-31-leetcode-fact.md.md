@@ -6,4 +6,4 @@ tags:
   - algorithm
 categories: Krafton Jungle
 ---
-![[Pasted image 20260831134509.png]]
+![alt text](image.png)
