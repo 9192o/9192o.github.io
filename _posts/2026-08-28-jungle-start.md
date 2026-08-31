@@ -156,7 +156,7 @@ Content-Length: 5
 
 아래는 그때 당시 작성했던 코드 중 일부다.
 
-```Go
+```go
 func parseRequest(reader *bufio.Reader) (request, error) {
     line, err := reader.ReadString('\n')
     if err != nil {
