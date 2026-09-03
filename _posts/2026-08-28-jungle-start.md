@@ -1,5 +1,5 @@
 ---
-title: 시작
+title: [Jungle] 시작
 date: 2026-08-28 19:00:00 +0900
 categories:
   - Krafton Jungle
@@ -205,7 +205,7 @@ func parseRequest(reader *bufio.Reader) (request, error) {
 }
 ```
 
-```Go
+```go
 func routeRequest(req request, directory string) response {
     switch {
     case req.method == "GET" && req.target == "/":
