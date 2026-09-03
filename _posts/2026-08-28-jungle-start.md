@@ -1,5 +1,5 @@
 ---
-title: [Jungle] 시작
+title: "[Jungle] 시작"
 date: 2026-08-28 19:00:00 +0900
 categories:
   - Krafton Jungle
