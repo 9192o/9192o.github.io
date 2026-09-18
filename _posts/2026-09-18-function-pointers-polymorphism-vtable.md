@@ -24,7 +24,7 @@ description: 함수 포인터와 콜백에서 시작해 C의 VTable과 C++ 가�
 
 변수의 주소를 포인터에 저장하는 건 이제 익숙한 것 같다.
 
-```C
+```c
 int x = 10;
 int *p = &x; 
 ```
@@ -33,7 +33,7 @@ int *p = &x;
 
 > "그렇다면 함수도 실행 파일 영역 어딘가에 저장되어있을 텐데, 주소가 있지 않을까? 그러면 그걸 가리키는..."
 
-```C
+```c
 int add(int a, int b)
 {
 	return a + b;
@@ -42,7 +42,7 @@ int add(int a, int b)
 
 간단히 `int a + int b`를 반환하는 함수를 정의하고, `add`함수의 주소를 `0x12345678` 이라고 가정해보자. 이를 가리키는 포인터는 어떻게 만들까? 먼저 `int x`를 가리키는 포인터는 `p`에 `int *`를 씌워서 만들었으니까...
 
-```C
+```c
 // 먼저 fp 라는 변수를 선언해보자.
 fp
 |
@@ -64,19 +64,20 @@ int *fp(int, int) // add는 int를 반환하니
 
 될테니 결국 "나 포인터 변수에요!" 하고 괄호를 씌워야 할 것이다. 그리고 선언과 할당을 해보면
 
-```C
+```c
 // 나는 "add 함수"를 가리키는 함수 포인터다!
 int (*fp)(int, int) = &add;
 ```
 
 또, 함수의 이름은 사실 **대부분의 표현식에서 해당 함수를 가리키는 함수 포인터로 표현된다**.
-```C
+
+```c
 int (*fp)(int, int) = add; // 이렇게 선언해도 된다.
 ```
 
 그럼 작성법은 다음과 같을 것이다.
 
-```C
+```c
 <반환형>(*포인터변수)(인자1, 인자2, ...) = <함수>
 
 int (*fp)(int, int) = add;
@@ -84,7 +85,7 @@ int (*fp)(int, int) = add;
 
 > "반환형과, 매개변수 타입을 가리켜야 하니, 다르면 포인터에 할당 못하겠구나!"
 
-```C
+```c
 double div(double a, double b)
 {
 	if (b != 0)
@@ -102,7 +103,7 @@ int main(void)
 
 그리고 사용법은 함수랑 똑같다!
 
-```C
+```c
 int add(int a, int b)
 {
 	return a + b;
@@ -122,7 +123,7 @@ int main(void)
 
 이제 함수를 포인터로 받는 방법을 알았으니, **"인자"**로 받아보자.
 
-```C
+```c
 void hello(void)
 {
 	printf("Hello World!\n");
@@ -131,7 +132,7 @@ void hello(void)
 
 `Hello World!`를 출력하는 함수 `hello`를 만들었으니, 함수 포인터를 이용해서 다른 함수에 넣어보자.
 
-```C
+```c
 // 해당 함수는 반환형: void, 인자: void 니까...
 void (*callback)(void)
 	|
@@ -145,7 +146,7 @@ void execute(void (*callback)(void))
 }
 ```
 
-```C
+```c
 Hello World!
 ```
 
@@ -157,7 +158,7 @@ Hello World!
 
 따라서 다음이 가능하다.
 
-```C
+```c
 execute(hello); // Hello World! 출력
 execute(goodbye); // Goodbye! 출력
 execute(print_something); // "something" 출력
@@ -171,7 +172,7 @@ execute(print_something); // "something" 출력
 
 이를 더 확장시켜보자.
 
-```C
+```c
 #include <stdio.h>
 
 int add(int a, int b)
@@ -213,14 +214,14 @@ int main(void)
 
 이제 배웠던 형태로 바꿔보자. `calculate()`함수를 하나 만들어서 콜백 함수를 넘기는 형태로.
 
-```C
+```c
 int calculate(int a, int b, int (*callback)(int, int))
 {
 	return callback(a, b); // 연산 함수를 받아서 실행시킨 값을 반환한다.
 }
 ```
 
-```C
+```c
 // calculate 하나로 다 된다...
 printf("%d", calculate(10, 20, add);
 printf("%d", calculate(10, 20, sub);
@@ -242,7 +243,7 @@ printf("%d", calculate(10, 20, mul);
 
 `01_use_after_free` 문제에서는 `VTable` 구조체가 하나 정의되어 있다.
 
-```C
+```c
 typedef struct
 {
     void (*render)(Widget *self);
@@ -266,7 +267,7 @@ VTable 구조체 변수
 
 그리고 `Widget` 구조체는 다음과 같이 정의되어 있다.
 
-```C
+```c
 struct Widget
 {
     const VTable *vtbl;
@@ -280,7 +281,7 @@ struct Widget
 
 `event()` 함수들은 다음과 같이 정의되어 있다.
 
-```C
+```c
 static void widget_noop_event(Widget *self, int code)
 {
     (void)self;
@@ -299,7 +300,7 @@ static void dialog_on_event(Widget *self, int code)
 
 그리고 각 `VTable`은
 
-```C
+```c
 static void dialog_on_event(Widget *self, int code);
 
 static const VTable BUTTON_VT = {button_render, widget_noop_event};
@@ -313,7 +314,7 @@ static const VTable DIALOG_VT = {dialog_render, dialog_on_event};
 
 먼저 `render()` 접근.
 
-```C
+```c
 static void screen_render(Screen *s)
 {
     for (int i = 0; i < s->count; i++)
@@ -326,7 +327,7 @@ static void screen_render(Screen *s)
 
 그리고 `on_event()` 접근.
 
-```C
+```c
 for (int i = 0; i < s->count; i++)
 {
 	Widget *w = s->items[i];
@@ -354,7 +355,7 @@ Widget --> VTable --> render/on_event에 매핑된 실제 함수 주소 --> 실�
 
 > "이 함수가 어느 객체의 데이터를 가지고 작업해야 하지?"
 
-```C
+```c
 static void dialog_render(Widget *self)
 {
     printf("%s\n", self->label);
@@ -378,7 +379,8 @@ static void dialog_render(Widget *self)
 C에는 알다시피 `class, virtual, override` 같은 문법이 없지만, 객체지향적인 구조 자체를 만들 수 없는 것은 아니다.
 
 1. 객체의 `상태`는 구조체로 구현하고,
-```C
+
+```c
 struct Widget
 {
 	const VTable *vtbl;
@@ -388,12 +390,14 @@ struct Widget
 ```
 
 2. 객체의 `행동`은 함수로 표현하고,
-```C
+
+```c
 void widget_render(Widget *self);
 ```
 
 3. 함수 포인터들을 묶어 `테이블`로 만든 뒤,
-```C
+
+```c
 typedef struct
 {
 	void (*render)(Widget *self);
@@ -401,7 +405,8 @@ typedef struct
 ```
 
 4. 객체가 그 `테이블`을 가리키게 하면 된다.
-```C
+
+```c
 widget->vtbl->render(widget);
 ```
 
@@ -409,7 +414,7 @@ widget->vtbl->render(widget);
 
 1. 부모 클래스 `Widget` 이 있다고 하고
 
-```C++
+```cpp
 class Widget
 {
 	public:
@@ -424,7 +429,7 @@ class Widget
 
 2. 이를 상속하는 `Dialog`를 만들면
 
-```C++
+```cpp
 class Dialog : public Widget
 {
 	public:
@@ -439,13 +444,14 @@ class Dialog : public Widget
 ```
 
 3. 부모 클래스 포인터가 자식 객체를 가리킬 수 있다.
-```C++
+
+```cpp
 Widget *widget = new Dialog();
 ```
 
 포인터는 `Widget *` 형인데 `widget->render();`를 실행하면
 
-```C++
+```cpp
 widget->render();
 
 // Widget::render() 가 아닌
